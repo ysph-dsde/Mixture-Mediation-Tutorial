@@ -1,5 +1,5 @@
-# This is the R script to analysis the individual exposures directly and do mediation analysis.
-# This analysis should serve as a baseline performance on the identification of the (individual) mediation effects
+# This is the R script to analysis the single exposures directly and do mediation analysis.
+# This analysis should serve as a baseline performance on the (individual) mediation effects
 
 ######################## Set up #############################
 
@@ -24,7 +24,7 @@ set.seed(1211)
 
 source("Functions/Functions_IndTesting.R")
 
-#################### Run Individual Exposure Mediation Testing WITHOUT co-exposures ###################
+#################### Run SEMA WITHOUT co-exposures ###################
 
 # a list to store the mediation testing results
 list_medTest <- list()
@@ -79,7 +79,7 @@ for (correct_id in correct_trgt) {
     p.adjust(method = "BH")
 }
 
-#################### Run Individual Exposure Mediation Testing WITH co-exposures ###################
+#################### Run SEMA WITH co-exposures ###################
 set.seed(1211)
 tictoc::tic("Individual exposure testing (W. Coexposure)")
 list_medTest[["Raw"]] <- IndExpo_medTest(
@@ -94,7 +94,6 @@ tictoc::toc()
 # 15 mins
 
 # extract the DE IE and TE of each PC component
-# turn them into big dfs and merge to list_medTest[["Raw"]][["IE"]]
 tmp <- paste(c("CDE", "PNDE", "TNDE", "PNIE", "TNIE", "TE", "PM"), "Table")
 tidy_res <- list()
 
@@ -122,7 +121,6 @@ for (correct_id in correct_trgt) {
     p.adjust(method = "BH")
 }
 
-# list_medTest[["Raw"]][["Tidy Results"]]$`PNIE Table` %>% round(2)
 
 ############################ Output Results ###########################
 

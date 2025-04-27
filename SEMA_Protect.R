@@ -1,5 +1,3 @@
-
-
 pkgs <- c(
   "tidyverse",
   "MASS",
@@ -21,7 +19,7 @@ set.seed(1211)
 
 source("Functions/Functions_IndTesting.R")
 
-#################### LTE4 and HEADCIRCUMFERENCEZSCORE (PHTH only) - Individual Exposures WITHOUT co-exposures ###################
+#################### LTE4 and HEADCIRCUMFERENCEZSCORE (PHTH only) - SEMA WITHOUT co-exposures ###################
 
 # set up
 expo_nm <- colnames(list_headZscore[["Exposures"]])
@@ -106,7 +104,6 @@ tictoc::toc()
 
 
 # extract the DE IE and TE of each PC component
-# turn them into big dfs and merge
 tmp <- paste(c("CDE", "PNDE", "TNDE", "PNIE", "TNIE", "TE", "PM"), "Table")
 tidy_res <- list()
 
