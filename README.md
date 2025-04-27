@@ -19,6 +19,27 @@ You can download the datasets here:
 
 After downloading, place the data files in the appropriate directories as indicated in the scripts.
 
+## Repository Structure
+
+- **Functions/**
+  - **Functions_DataGen.R**: Functions for simulation data generation
+  - **Functions_ERS.R**: Functions for ERS-based mediation analysis
+  - **Functions_IndTesting.R**: Functions for single exposure mediation analysis (SEMA)
+  - **Functions_PCA.R**: Functions for PCA-based mediation analysis
+- **BKMR_Protect.R**: BKMR-CMA analysis on PROTECT dataset
+- **BKMR_sim.R**: BKMR-CMA analysis on simulated dataset
+- **Data_Clean_PROTECT.R**: Data cleaning and preprocessing for PROTECT dataset
+- **ERS_Protect.R**: ERS-based mediation analysis on PROTECT dataset
+- **ERS_sim_Case1.R**: ERS-based mediation analysis on simulated data (case 1)
+- **ERS_sim_Case2.R**: ERS-based mediation analysis on simulated data (case 2)
+- **SEMA_Protect.R**: Single exposure mediation analysis (SEMA) on PROTECT dataset
+- **SEMA_sim.R**: Single exposure mediation analysis (SEMA) on simulated dataset
+- **PCA_Protect.R**: PCA-based mediation analysis on PROTECT dataset
+- **PCA_sim.R**: PCA-based mediation analysis on simulated dataset
+- **Simulation_Data_Generation.R**: Script for generating simulated datasets
+- **LICENSE**: License information
+- **README.md**: Project documentation (this file)
+
 ## Notes
 - Supporting functions are located in the Functions/ directory and sourced within scripts.
 - For computationally intensive methods such as BKMR, runtime may be substantial depending on your computing environment.
