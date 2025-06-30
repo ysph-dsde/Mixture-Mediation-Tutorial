@@ -26,6 +26,18 @@ After downloading, place the data files in the appropriate directories as indica
   - **Functions_ERS.R**: Functions for ERS-based mediation analysis
   - **Functions_IndTesting.R**: Functions for single exposure mediation analysis (SEMA)
   - **Functions_PCA.R**: Functions for PCA-based mediation analysis
+- **Evaluation/**
+  - **data_sim.R**: Master script for simulating 1 dataset with 100,000 observation under each degree of effect
+  - **estimate_true_ers.R**: Estimates "true" ERS effects using a large simulated dataset (n = 100,000)
+  - **estimate_true_pca.R**: Estimates "true" PCA effects using a large simulated dataset (n = 100,000)
+  - **eva_bkmr.R**: Computes variable selection accuracy for BKMR-CMA
+  - **eva_ers.R**: Computes relative bias for ERS
+  - **eva_pca.R**: Computes relative bias for PCA
+  - **eva_sema.R**: Computes relative bias and variable selection accuracy for SEMA
+  - **functions_ERS.R**: Functions for ERS-based mediation analysis
+  - **plot_relative_bias.R**: Generates comparative plots of percent relative bias across methods
+  - **plot_selection_metrics.R**: Generates comparative plots of true/false positive rates across methods
+  - **summarize_sim_results.R**: Extracts and stores relevant quantities from each simulated dataset
 - **BKMR_Protect.R**: BKMR-CMA analysis on PROTECT dataset
 - **BKMR_sim.R**: BKMR-CMA analysis on simulated dataset
 - **Data_Clean_PROTECT.R**: Data cleaning and preprocessing for PROTECT dataset

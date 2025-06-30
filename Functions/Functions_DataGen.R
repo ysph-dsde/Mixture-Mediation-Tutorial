@@ -1,7 +1,3 @@
-# This is the code script to store the required functions to generate simulation data
-# The original code writting process can be found in Data_Gen_Test.R
-# The final data generation script is in DataGeneration_Final.R
-
 ############## Description ##################
 
 # We will have the following functions in this code script:
@@ -62,14 +58,15 @@ data_gen <- function(n_obs,
                      Beta_a,
                      Beta_c,
                      Theta_c,
-                     # theta_c is what confounders contributes to exposures (q times s dim)
-                     adjR2_M,
-                     adjR2_Y) {
+                     adjR2_M = NULL,
+                     adjR2_Y = NULL,
+                     r2_Y = NULL,
+                     r2_M = NULL) {
   n_obs <- n_obs
-  q <- n_expo
-  p <- 1 # we assume 1 mediator for now
+  p <- n_expo
+  q <- 1 # we assume 1 mediator for now
   # We assume no confounders
-  s <- n_confound + 1 # if s == 1 then it is just the intercept
+  s <- n_confound
   
   # Generate intercept and confounders
   if (s == 1) {
@@ -78,7 +75,8 @@ data_gen <- function(n_obs,
   } else{
     interCept <- rep(1, n_obs) %>% as.matrix()
     
-    Sigma_C <- gen_block_corr(exposure_numbers = confound_blockNum, correlations = confound_blockCorr)
+    Sigma_C <- gen_block_corr(exposure_numbers = confound_blockNum,
+                              correlations = confound_blockCorr)
     
     conFound <- MASS::mvrnorm(n = n_obs,
                               mu = rep(0, s - 1),
@@ -87,32 +85,32 @@ data_gen <- function(n_obs,
   }
   
   ## Exposures
-  Sigma_X <- gen_block_corr(exposure_numbers = expo_blockNum, correlations = expo_blockCorr)
+  Sigma_X <- gen_block_corr(exposure_numbers = expo_blockNum,
+                            correlations = expo_blockCorr)
   
   # generate the exposures
   X <- t(Theta_c %*% t(conFound)) + MASS::mvrnorm(n = n_obs,
-                                                  mu = rep(0, q),
-                                                  Sigma = Sigma_X) #  MASS::mvrnorm(n = n_obs, mu = rep(0, q), Sigma = Sigma_X)
-  colnames(X) <- paste0("x", 1:q)
+                                                  mu = rep(0, p),
+                                                  Sigma = Sigma_X)
   
   # we can calculate the Sigma_M (a scalar here)
-  adjR2_M <- adjR2_M
-  r2_M <- 1 - ((n_obs - q - s - 1) / (n_obs - 1)) * (1 - adjR2_M) # set adjusted r-squared to 0.3
-  
-  
+  if (is.null(r2_M)) {
+    r2_M <- 1 - ((n_obs - p - s - 1) / (n_obs - 1)) * (1 - adjR2_M)
+  }
   # some prep
   big_alpha <- cbind(Alpha_a, Alpha_c)
   colnames(big_alpha) <- NULL
   
-  V_mat_alpha <- matrix(0, nrow = (q + s), ncol = (q + s))
-  V_mat_alpha[1:q, 1:q] <- var(X)
-  V_mat_alpha[(q + 1):(q + s), (q + 1):(q + s)] <- var(C_i_T)
+  V_mat_alpha <- matrix(0, nrow = (p + s), ncol = (p + s))
+  V_mat_alpha[1:p, 1:p] <- var(X)
+  V_mat_alpha[(p + 1):(p + s), (p + 1):(p + s)] <- var(C_i_T)
   
   
   Sigma_M <- ((1 - r2_M) / (r2_M)) * big_alpha %*% V_mat_alpha %*% t(big_alpha)
   
   # Generate M Mediators
-  M <- t(Alpha_a %*% t(X) + Alpha_c %*% t(C_i_T)) + MASS::mvrnorm(n = n_obs, mu = 0, Sigma = Sigma_M) # mu + error
+  M <- t(Alpha_a %*% t(X) + Alpha_c %*% t(C_i_T)) + 
+    MASS::mvrnorm(n = n_obs, mu = 0, Sigma = Sigma_M) # mu + error
   
   #Generate sigma^2_e (error variance of the outcome model)
   # big_beta
@@ -121,37 +119,33 @@ data_gen <- function(n_obs,
   
   # build the V = var covar of M, X
   V_mat <- matrix(0, nrow = (p + q + s), ncol = (p + q + s))
-  V_mat[1:p, 1:p] <- var(M)
-  V_mat[(p + 1):(p + q), (p + 1):(p + q)] <- var(X)
-  V_mat[(p + q + 1):(p + q + s), (p + q + 1):(p + q + s)] <- var(C_i_T)
+  V_mat[1:q, 1:q] <- var(M)
+  V_mat[(q + 1):(q + p), (q + 1):(q + p)] <- var(X)
+  V_mat[(q + p + 1):(q + p + s), (q + p + 1):(q + p + s)] <- var(C_i_T)
   
   
   # Calculate the sigma_y
-  adjR2_Y <- adjR2_Y
-  r2_Y <- 1 - ((n_obs - p - q - s - 1) / (n_obs - 1)) * (1 - adjR2_Y) # set adjusted r-squared to 0.3
-  
+  if (is.null(r2_Y)) {
+    r2_Y <- 1 - ((n_obs - q - p - s - 1) / (n_obs - 1)) * (1 - adjR2_Y)
+  }
   # calculate the optimal sigma^2_e for the two cases
   Sigma_Y <- ((1 - r2_Y) / (r2_Y)) * big_bt %*% V_mat %*% t(big_bt)
   
   #Generate Y
   comb_predictors <- cbind(M, X, C_i_T)
-  colnames(comb_predictors)[seq(p)] <- paste("m", seq(p))
-  colnames(comb_predictors)[p + seq(q)] <- paste("x", seq(q))
-  colnames(comb_predictors)[p + q + seq(s)] <- paste(c("intercept", paste("c", seq(s -
-                                                                                     1))))
   
   # if there are more than one confounders
-  #ifelse(s > 1,   colnames(comb_predictors)[p + q + 1 + seq(s)] <- paste("c", seq(s-1)),
-  #      0)
+  #ifelse(s > 1, colnames(comb_predictors)[p + q + 1 + seq(s)] <- paste("c", seq(s-1)), 0)
   
-  y1 <- t(big_bt %*% t(comb_predictors)) + MASS::mvrnorm(n = n_obs, mu = 0, Sigma = Sigma_Y) # mu + error
+  y1 <- t(big_bt %*% t(comb_predictors)) +
+    MASS::mvrnorm(n = n_obs, mu = 0, Sigma = Sigma_Y) # mu + error
   
   #Combine the results
-  df_gen <- cbind(y1, M, X, C_i_T) %>% as.data.frame() #%>% dplyr::rename(y = V1, m1 = V2, intercept = V33)
+  df_gen <- cbind(y1, M, X, C_i_T) %>% as.data.frame()
   
   colnames(df_gen) <- c("y",
-                        paste0("m", seq(p)),
-                        paste0("x", seq(q)),
+                        paste0("m", seq(q)),
+                        paste0("x", seq(p)),
                         "intercept",
                         paste0("c", seq(s - 1)))
   

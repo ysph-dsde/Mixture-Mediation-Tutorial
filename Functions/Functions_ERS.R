@@ -31,24 +31,10 @@ ers_enet_adapt = function(x,
                           pf2 = rep(1, p),
                           method = 'ls',
                           n_confound) {
-  # a Function to format elapsed time
-  format_elapsed_time <- function(elapsed_time) {
-    if (elapsed_time < 60) {
-      return(paste(elapsed_time, "seconds"))
-    } else if (elapsed_time < 3600) {
-      return(paste(round(elapsed_time / 60, 2), "minutes"))
-    } else {
-      return(paste(round(elapsed_time / 3600, 2), "hours"))
-    }
-  }
-  
   # a function to count the number of selected variables
   count_selected_expos <- function(model, n_confound) {
     sum(gcdnet::coef(model) != 0)  - n_confound - 1 # for the intercept
   }
-  
-  # Start time
-  start_time <- Sys.time()
   
   # 5 fold CV Elastic Net over the range of lambda2
   cv_lambda2 <- pbvapply(lambda2, function(lambda) {
@@ -94,17 +80,6 @@ ers_enet_adapt = function(x,
   if (count_selected_expos(best_mod, n_confound) < 3) {
     # Case when optimal lambda1 and lambda2 select less than 3 exposures
     
-    print(
-      paste(
-        "The optimal Lambda 1 and Lambda 2 selects only",
-        count_selected_expos(best_mod, n_confound),
-        "exposures"
-      )
-    )
-    print(paste("The cv.lambda1.min is", cv_lambda1_min))
-    print(paste("The cv.lambda2.min is", cv_lambda2_min))
-    print("Loop all possible lambda 1 values to select at least 3 exposures")
-    
     # Find the Optimal lambda1 that selects at least 3 exposures
     cv_result <- cv.gcdnet(
       x = x,
@@ -147,24 +122,9 @@ ers_enet_adapt = function(x,
     }
     
     if (is.null(optimal_lambda1)) {
-      
-      print(
-        "No combination of lambda1 and lambda2 found that selects at least 3 exposures. Return the best model that minimizes least square error."
-      )
-      
-      
-      # End time
-      end_time <- Sys.time()
-      elapsed_seconds <- as.numeric(difftime(end_time, start_time, units = "secs"))
-      print(paste("Elapsed time:", format_elapsed_time(elapsed_seconds)))
-      
       # If no combination selects at least 3 exposures, use the minimum cross-validated lambda1
-      
       return(best_mod)
     } else{
-      print(paste("The optimal Lambda 1 value is now", optimal_lambda1))
-      print(paste("The optimal Lambda 2 value is now", cv_lambda2_min))
-      
       mod_atleast_3 <- gcdnet(
         x = x,
         y = y,
@@ -175,38 +135,11 @@ ers_enet_adapt = function(x,
         method = method
       )
       
-      print(
-        paste(
-          "The chosen Lambda 1 and Lambda 2 now selects",
-          count_selected_expos(mod_atleast_3, n_confound),
-          "exposures"
-        )
-      )
-      
-      # End time
-      end_time <- Sys.time()
-      elapsed_seconds <- as.numeric(difftime(end_time, start_time, units = "secs"))
-      print(paste("Elapsed time:", format_elapsed_time(elapsed_seconds)))
-      
       # return the best model with at least three variables chosen
       return(mod_atleast_3)
     }
     
   } else{
-    # Case when optimal lambda1 and lambda2 select more than 3 exposures at first try
-    print(
-      paste(
-        "The optimal Lambda 1 and Lambda 2 selects",
-        count_selected_expos(best_mod, n_confound),
-        "exposures"
-      )
-    )
-    
-    # End time
-    end_time <- Sys.time()
-    elapsed_seconds <- as.numeric(difftime(end_time, start_time, units = "secs"))
-    print(paste("Elapsed time:", format_elapsed_time(elapsed_seconds)))
-    
     # Return the Elastic Net results with optimal lambda settings
     return(best_mod)
   }
@@ -280,7 +213,7 @@ ers_Calc = function(data,
   
   if (include_int == T) {
     # the complex case where the interactions, square terms are in the ENET var selection
-    data_mod <- model.matrix( ~ -1 + .^2, data = x_train)
+    data_mod <- model.matrix(~ -1 + .^2, data = x_train)
     x_sq <- x_train^2
     names(x_sq) <- paste0(names(x_train), '^2')
     
@@ -314,7 +247,7 @@ ers_Calc = function(data,
     
   } else {
     # the simple case with just the original exposures
-    data_mod <- model.matrix( ~ -1 + ., data = x_train)
+    data_mod <- model.matrix(~ -1 + ., data = x_train)
     
     if (is.null(covar) == F) {
       pf <- c(rep(1, ncol(data_mod)), rep(0, ncol(covar_train)))
@@ -391,7 +324,7 @@ ers_Calc = function(data,
   
   if (include_int == T) {
     # the complex case where the interactions, square terms are in the ENET var selection
-    data_mod <- model.matrix( ~ -1 + .^2, data = x_analysis)
+    data_mod <- model.matrix(~ -1 + .^2, data = x_analysis)
     x_sq <- x_analysis^2
     names(x_sq) <- paste0(names(x_analysis), '^2')
     
@@ -421,7 +354,7 @@ ers_Calc = function(data,
     
   } else {
     # the simple case with just the original exposures
-    data_mod <- model.matrix( ~ -1 + ., data = x_analysis)
+    data_mod <- model.matrix(~ -1 + ., data = x_analysis)
     
     if (is.null(covar) == F) {
       data_mod <- cbind(data_mod, covar_analysis)
