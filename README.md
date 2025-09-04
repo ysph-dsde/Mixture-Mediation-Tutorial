@@ -1,5 +1,5 @@
 # A Tutorial on Conducting Mediation Analysis with Exposure Mixtures
-This repository provides code and functions for conducting mediation analysis in the context of exposure mixtures, focusing on both simulated data and real-world applications from the PROTECT cohort study. The methods implemented include single exposure mediation analysis (SEMA), principal component analysis (PCA)-based mediation, environmental risk score (ERS)-based mediation, and Bayesian kernel machine regression causal mediation analysis (BKMR-CMA).
+This repository provides code and functions for conducting mediation analysis in the context of exposure mixtures, focusing on both simulated data and real-world applications from the PROTECT cohort study. The methods implemented include single exposure mediation analysis (SE-MA), principal component-based mediation analysis (PC-MA), environmental risk score-based mediation analysis (ERS-MA), and Bayesian kernel machine regression causal mediation analysis (BKMR-CMA).
 
 ## Overview
 
@@ -23,31 +23,31 @@ After downloading, place the data files in the appropriate directories as indica
 
 - **Functions/**
   - **Functions_DataGen.R**: Functions for simulation data generation
-  - **Functions_ERS.R**: Functions for ERS-based mediation analysis
-  - **Functions_IndTesting.R**: Functions for single exposure mediation analysis (SEMA)
-  - **Functions_PCA.R**: Functions for PCA-based mediation analysis
+  - **Functions_ERS.R**: Functions for ERS-MA
+  - **Functions_IndTesting.R**: Functions for single exposure mediation analysis (SE-MA)
+  - **Functions_PCA.R**: Functions for PC-MA
 - **Evaluation/**
   - **data_sim.R**: Master script for simulating 1 dataset with 100,000 observation under each degree of effect
-  - **estimate_true_ers.R**: Estimates "true" ERS effects using a large simulated dataset (n = 100,000)
-  - **estimate_true_pca.R**: Estimates "true" PCA effects using a large simulated dataset (n = 100,000)
+  - **estimate_true_ers.R**: Estimates "true" ERS-MA effects using a large simulated dataset (n = 100,000)
+  - **estimate_true_pca.R**: Estimates "true" PC-MA effects using a large simulated dataset (n = 100,000)
   - **eva_bkmr.R**: Computes variable selection accuracy for BKMR-CMA
-  - **eva_ers.R**: Computes relative bias for ERS
-  - **eva_pca.R**: Computes relative bias for PCA
-  - **eva_sema.R**: Computes relative bias and variable selection accuracy for SEMA
-  - **functions_ERS.R**: Functions for ERS-based mediation analysis
+  - **eva_ers.R**: Computes relative bias for ERS-MA
+  - **eva_pca.R**: Computes relative bias for PC-MA
+  - **eva_sema.R**: Computes relative bias and variable selection accuracy for SE-MA
+  - **functions_ERS.R**: Functions for ERS-MA
   - **plot_relative_bias.R**: Generates comparative plots of percent relative bias across methods
   - **plot_selection_metrics.R**: Generates comparative plots of true/false positive rates across methods
   - **summarize_sim_results.R**: Extracts and stores relevant quantities from each simulated dataset
 - **BKMR_Protect.R**: BKMR-CMA analysis on PROTECT dataset
 - **BKMR_sim.R**: BKMR-CMA analysis on simulated dataset
 - **Data_Clean_PROTECT.R**: Data cleaning and preprocessing for PROTECT dataset
-- **ERS_Protect.R**: ERS-based mediation analysis on PROTECT dataset
-- **ERS_sim_Case1.R**: ERS-based mediation analysis on simulated data (case 1)
-- **ERS_sim_Case2.R**: ERS-based mediation analysis on simulated data (case 2)
-- **SEMA_Protect.R**: Single exposure mediation analysis (SEMA) on PROTECT dataset
-- **SEMA_sim.R**: Single exposure mediation analysis (SEMA) on simulated dataset
-- **PCA_Protect.R**: PCA-based mediation analysis on PROTECT dataset
-- **PCA_sim.R**: PCA-based mediation analysis on simulated dataset
+- **ERS_Protect.R**: ERS-MAs on PROTECT dataset
+- **ERS_sim_Case1.R**: ERS-MA on simulated data (case 1)
+- **ERS_sim_Case2.R**: ERS-MA on simulated data (case 2)
+- **SEMA_Protect.R**: Single exposure mediation analysis (SE-MA) on PROTECT dataset
+- **SEMA_sim.R**: Single exposure mediation analysis (SE-MA) on simulated dataset
+- **PCA_Protect.R**: PC-MA on PROTECT dataset
+- **PCA_sim.R**: PC-MA on simulated dataset
 - **Simulation_Data_Generation.R**: Script for generating simulated datasets
 - **LICENSE**: License information
 - **README.md**: Project documentation (this file)
