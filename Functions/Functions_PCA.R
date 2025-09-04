@@ -45,7 +45,6 @@ PCA_Generate <- function(data, prop_explained = 0.8) {
 ###################### Function - PCA_medTest ##############################
 
 PCA_medTest <- function(data,
-                        nboot = 1000,
                         confounders_nm,
                         mediator_nm,
                         outcome_nm) {
@@ -73,36 +72,10 @@ PCA_medTest <- function(data,
   # a function for purrr::map()
   run_cmest <- function(PCA_id,
                         data,
-                        nboot,
                         confounders_nm = confounders_nm,
                         mediator_nm = mediator_nm,
                         outcome_nm = outcome_nm) {
     if (length(confounders_nm) == 0) {
-      y_formula <- as.formula(paste0(
-        outcome_nm,
-        " ~ ",
-        PCA_id,
-        " + ",
-        mediator_nm,
-        " + ",
-        paste0(PCA_names[PCA_names != PCA_id], collapse = " + ")
-      ))
-      m_formula <- as.formula(paste0(
-        mediator_nm,
-        " ~ ",
-        PCA_id,
-        " + ",
-        paste0(PCA_names[PCA_names != PCA_id], collapse = " + ")
-      ))
-      
-      # Evaluate the formulas in the correct environment
-      y_model <- eval(bquote(glm(
-        .(y_formula), family = gaussian, data = data
-      )))
-      m_model <- eval(bquote(glm(
-        .(m_formula), family = gaussian, data = data
-      )))
-      
       # the CMA mediation effect testing
       suppressWarnings(
         cma_test <- CMAverse::cmest(
@@ -110,48 +83,18 @@ PCA_medTest <- function(data,
           model = "rb",
           full = T,
           EMint = F,
-          yreg = y_model,
-          mreg = list(m_model),
+          yreg = "linear",
+          mreg = list("linear"),
           mval = list(1),
           basec = c(PCA_names[PCA_names != PCA_id]),
           outcome = outcome_nm,
           exposure = PCA_id,
           mediator = mediator_nm,
-          inference = "bootstrap",
-          nboot = nboot,
-          boot.ci.type = "per"
+          estimation = "paramfunc",
+          inference = "delta"
         )
       )
     } else {
-      y_formula <- as.formula(paste0(
-        outcome_nm,
-        " ~ ",
-        PCA_id,
-        " + ",
-        mediator_nm,
-        " + ",
-        paste0(PCA_names[PCA_names != PCA_id], collapse = " + "),
-        " + ",
-        paste0(confounders_nm, collapse = " + ")
-      ))
-      m_formula <- as.formula(paste0(
-        mediator_nm,
-        " ~ ",
-        PCA_id,
-        " + ",
-        paste0(PCA_names[PCA_names != PCA_id], collapse = " + "),
-        " + ",
-        paste0(confounders_nm, collapse = " + ")
-      ))
-      
-      # Evaluate the formulas in the correct environment
-      y_model <- eval(bquote(glm(
-        .(y_formula), family = gaussian, data = data
-      )))
-      m_model <- eval(bquote(glm(
-        .(m_formula), family = gaussian, data = data
-      )))
-      
       # the CMA mediation effect testing
       suppressWarnings(
         cma_test <- CMAverse::cmest(
@@ -159,16 +102,15 @@ PCA_medTest <- function(data,
           model = "rb",
           full = T,
           EMint = F,
-          yreg = y_model,
-          mreg = list(m_model),
+          yreg = "linear",
+          mreg = list("linear"),
           mval = list(1),
           basec = c(PCA_names[PCA_names != PCA_id], confounders_nm),
           outcome = outcome_nm,
           exposure = PCA_id,
           mediator = mediator_nm,
-          inference = "bootstrap",
-          nboot = nboot,
-          boot.ci.type = "per"
+          estimation = "paramfunc",
+          inference = "delta"
         )
       )
     }
@@ -184,14 +126,14 @@ PCA_medTest <- function(data,
     
     colnames(summary_table) <- c("Estimate", "SE", "CI_Low", "CI_Upper", "Pval")
     
-    print(paste("     ", PCA_id, "Bootstrap done"))
+    print(paste("     ", PCA_id, "Calculation done"))
     
     list(`CMA Test` = cma_test, `CMA Summary Table` = summary_table)
   }
   
   # run the mediation tests over all the PC components
   medTest_res <- purrr::map(PCA_names,
-                            ~ run_cmest(.x, data, nboot, confounders_nm, mediator_nm, outcome_nm))
+                            ~ run_cmest(.x, data, confounders_nm, mediator_nm, outcome_nm))
   names(medTest_res) <- PCA_names
   return(medTest_res)
 }
