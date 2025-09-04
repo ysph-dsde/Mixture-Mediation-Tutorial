@@ -37,7 +37,6 @@ for (j in my_tasks) {
   set.seed(1211)
   list_medTest[["Raw (Naive)"]] <- IndExpo_medTest_NV(
     data = list_df[["Raw"]],
-    nboot = 1000,
     exposures_nm = expo_nm,
     mediator_nm = mediator_nm,
     outcome_nm = outcome_nm,
@@ -77,7 +76,6 @@ for (j in my_tasks) {
   set.seed(1211)
   list_medTest[["Raw"]] <- IndExpo_medTest(
     data = list_df[["Raw"]],
-    nboot = 1000,
     exposures_nm = expo_nm,
     mediator_nm = mediator_nm,
     outcome_nm = outcome_nm,

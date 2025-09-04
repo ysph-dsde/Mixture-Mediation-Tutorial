@@ -70,9 +70,8 @@ for (j in my_tasks) {
     mediator = "m1",
     a = a,
     astar = astar,
-    inference = "bootstrap",
-    nboot = 1000,
-    boot.ci.type = "per"
+    estimation = "paramfunc",
+    inference = "delta"
   )
   
   list_medTest[["ERS_Case2"]][["CMA Summary Table"]] <- cbind(

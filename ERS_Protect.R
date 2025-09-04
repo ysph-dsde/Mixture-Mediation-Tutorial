@@ -34,7 +34,7 @@ headZscore_ERS_result <- ers_Calc(
   lambda2_start = exp(seq(log(1e-4), log(1e2), length.out = 100)),
   seed = 1211
 )
-tictoc::toc() # 2 secs
+tictoc::toc() # 4.36 secs
 
 # optimal lambdas picked up 11 exposures
 
@@ -97,11 +97,10 @@ list_headZscore[["medTest"]][["ERS (Simple)"]][["CMA Test"]] <- CMAverse::cmest(
   mediator = mediator_nm,
   a = a,
   astar = astar,
-  inference = "bootstrap",
-  nboot = 1000,
-  boot.ci.type = "per"
+  estimation = "paramfunc",
+  inference = "delta"
 )
-tictoc::toc() # 8 secs
+tictoc::toc() # 0.01 sec
 
 
 list_headZscore[["medTest"]][["ERS (Simple)"]][["CMA Summary Table"]] <- cbind(
@@ -136,7 +135,7 @@ headZscore_ERS_result_comp <- ers_Calc(
   lambda2_start = exp(seq(log(1e-4), log(1e2), length.out = 100)),
   seed = 1211
 )
-tictoc::toc() # 31 seconds
+tictoc::toc() # 1m 6s
 
 list_headZscore[["ERS (Complex)"]][["ERS Result"]] <- headZscore_ERS_result_comp
 list_headZscore[["ERS (Complex)"]][["ERS_Data"]] <- headZscore_ERS_result_comp$post_ERS_data
@@ -200,11 +199,10 @@ list_headZscore[["medTest"]][["ERS (Complex)"]][["CMA Test"]] <- CMAverse::cmest
   mediator = mediator_nm,
   a = a,
   astar = astar,
-  inference = "bootstrap",
-  nboot = 1000,
-  boot.ci.type = "per"
+  estimation = "paramfunc",
+  inference = "delta"
 )
-tictoc::toc() # 8 secs
+tictoc::toc() # 0.03 secs
 
 list_headZscore[["medTest"]][["ERS (Complex)"]][["CMA Summary Table"]] <- cbind(
   list_headZscore[["medTest"]][["ERS (Complex)"]][["CMA Test"]]$effect.pe,

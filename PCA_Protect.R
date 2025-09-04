@@ -19,7 +19,6 @@ invisible(lapply(pkgs, library, character.only = T))
 
 # Read in the data
 list_headZscore <- read_rds("RDS/list_headZscore.rds")
-
 set.seed(1211)
 
 source("Functions/Functions_PCA.R")
@@ -49,17 +48,6 @@ fviz_eig(
 ) +
   theme(text = element_text(size = 15)) +
   labs(x = "Principal Components", title = "")
-
-# pdf("../pic/pca_data_scree.pdf", width = 8, height = 5)
-# fviz_eig(PCA_res_headZscore, addlabels = T, choice = "variance", ncp = id_80var+1) +
-#   theme(text = element_text(size = 15)) +
-#   labs(x = "Principal Components", title = "")
-# dev.off()
-# tiff("../pic/pca_data_scree.tiff", width = 8, height = 5, units = "in", res = 800, compression = "lzw")
-# fviz_eig(PCA_res_headZscore, addlabels = T, choice = "variance", ncp = id_80var+1) +
-#   theme(text = element_text(size = 15)) +
-#   labs(x = "Principal Components", title = "")
-# dev.off()
 
 
 ## Create a heatmap of the loadings
@@ -97,20 +85,6 @@ plot <- ggplot(loadings_PCA_headZscore,
   )
 plot
 
-# ggsave(
-#   "pca_data_heat.pdf",
-#   path = "../pic/",
-#   plot = plot,
-#   device = "pdf",
-#   width = 8,
-#   height = 5,
-#   units = "in",
-#   dpi = 800
-# )
-# tiff("../pic/pca_data_heat.tiff", width = 8, height = 5, units = "in", res = 800, compression = "lzw")
-# print(plot)
-# dev.off()
-
 
 ################################ PCA Mediation Effect Testing and estimation (expo as confounder) ###############3
 
@@ -127,12 +101,11 @@ set.seed(1211)
 tictoc::tic()
 list_headZscore[["medTest"]][["PCA"]] <- PCA_medTest(
   data = list_headZscore[["PCA_Data"]],
-  nboot = 1000,
   outcome_nm = outcome_nm,
   mediator_nm = mediator_nm,
   confounders_nm = confounders_nm
 )
-tictoc::toc() # 43 secs
+tictoc::toc() # 0.24 secs
 
 # extract the DE IE and TE of each PC component
 tmp <- paste(c("CDE", "PNDE", "TNDE", "PNIE", "TNIE", "TE", "PM"), "Table")

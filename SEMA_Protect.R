@@ -19,7 +19,7 @@ set.seed(1211)
 
 source("Functions/Functions_IndTesting.R")
 
-#################### LTE4 and HEADCIRCUMFERENCEZSCORE (PHTH only) - SEMA WITHOUT co-exposures ###################
+#################### LTE4 and HEADCIRCUMFERENCEZSCORE (PHTH only) - Individual Exposures WITHOUT co-exposures ###################
 
 # set up
 expo_nm <- colnames(list_headZscore[["Exposures"]])
@@ -37,11 +37,10 @@ list_headZscore[["medTest"]][["IndExpo (Naive)"]] <- IndExpo_medTest_NV(
   exposures_nm = expo_nm,
   mediator_nm = mediator_nm,
   outcome_nm = outcome_nm,
-  confounders_nm = confounders_nm,
-  nboot = 1000
+  confounders_nm = confounders_nm
 )
 tictoc::toc()
-# 1.4 mins
+# 0.45 sec
 
 
 # extract the DE IE and TE of each PC component
@@ -72,9 +71,9 @@ for (correct_id in correct_trgt) {
     p.adjust(method = "BH")
 }
 
+list_headZscore[["medTest"]][["IndExpo (Naive)"]][["Tidy Results"]][["TE Table"]] %>% round(2)
 list_headZscore[["medTest"]][["IndExpo (Naive)"]][["Tidy Results"]][["TNDE Table"]] %>% round(2)
 list_headZscore[["medTest"]][["IndExpo (Naive)"]][["Tidy Results"]][["PNIE Table"]] %>% round(2)
-list_headZscore[["medTest"]][["IndExpo (Naive)"]][["Tidy Results"]][["TE Table"]] %>% round(2)
 
 write_rds(list_headZscore, "RDS/list_headZscore.rds")
 
@@ -96,14 +95,14 @@ list_headZscore[["medTest"]][["IndExpo"]] <- IndExpo_medTest(
   exposures_nm = expo_nm,
   mediator_nm = mediator_nm,
   outcome_nm = outcome_nm,
-  confounders_nm = confounders_nm,
-  nboot = 1000
+  confounders_nm = confounders_nm
 )
 tictoc::toc()
 # 1.8 mins
 
 
 # extract the DE IE and TE of each PC component
+# turn them into big dfs and merge
 tmp <- paste(c("CDE", "PNDE", "TNDE", "PNIE", "TNIE", "TE", "PM"), "Table")
 tidy_res <- list()
 
