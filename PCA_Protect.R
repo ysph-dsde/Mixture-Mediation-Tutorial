@@ -140,3 +140,17 @@ list_headZscore[["medTest"]][["PCA"]][["Tidy Results"]][["PNIE Table"]] %>% roun
 list_headZscore[["medTest"]][["PCA"]][["Tidy Results"]][["TE Table"]] %>% round(2)
 
 write_rds(list_headZscore, "RDS/list_headZscore.rds")
+
+df <- list_headZscore[["medTest"]][["PCA"]][["Tidy Results"]][["PNIE Table"]]
+
+#Global NIE point estimate = sum of exposure-specific PNIE estimates
+g_est <- sum(df$Estimate, na.rm = TRUE)
+
+#Combine standard errors under independence (variance additivity)
+g_se  <- sqrt(sum(df$SE^2, na.rm = TRUE))
+
+#95% CI using normal approximation
+z    <- qnorm(0.975)
+g_ci <- c(g_est - z * g_se, g_est + z * g_se)
+
+list(global_NIE = g_est, SE = g_se, CI95 = g_ci)
