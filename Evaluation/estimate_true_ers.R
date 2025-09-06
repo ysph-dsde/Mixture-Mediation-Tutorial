@@ -24,11 +24,8 @@ for(level in sce){
   # The Case 1 of the ERS score calculation
   # includes the exposures (main effects) only
   
-  tmp_df <- list_df[["ERS_Case1"]]
-  list_df[["ERS_Case1"]] <- NULL
-  
   list_df[["ERS_Case1"]] <- ers_Calc(
-    data = tmp_df,
+    data = list_df[["Raw"]],
     exposure = paste0("x", 1:30),
     outcome = "y",
     covar = paste0("c", 1:5),
