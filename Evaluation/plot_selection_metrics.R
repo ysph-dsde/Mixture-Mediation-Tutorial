@@ -15,12 +15,12 @@ sema_tpr <- sema_tpr |>
   rename(Mean = TPR_mean,
          Lower = TPR_lower,
          Upper = TPR_upper) |>
-  mutate(Metric = "TPR", Method = paste0("SEMA (", Method, ")"))
+  mutate(Metric = "TPR", Method = paste0("SE-MA (", Method, ")"))
 sema_fpr <- sema_fpr |>
   rename(Mean = FPR_mean,
          Lower = FPR_lower,
          Upper = FPR_upper) |>
-  mutate(Metric = "FPR", Method = paste0("SEMA (", Method, ")"))
+  mutate(Metric = "FPR", Method = paste0("SE-MA (", Method, ")"))
 sema_combined <- rbind(sema_tpr, sema_fpr)
 
 # Format BKMR TPR/FPR
@@ -111,3 +111,4 @@ plot_metric <- function(metric_label) {
 # Draw TPR and FPR plots
 plot_metric("TPR")
 plot_metric("FPR")
+
