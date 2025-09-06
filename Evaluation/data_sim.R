@@ -48,8 +48,9 @@ r2_M <- c(0.1, 0.4)
 
 for (j in 1:length(sce)) {
   # create a list to store all the data
+  list_df <- list()
   
-  list_df <- data_gen(
+  list_df[["Raw"]] <- data_gen(
     n_obs = 100000,
     n_expo = p,
     n_confound = s,
@@ -71,3 +72,4 @@ for (j in 1:length(sce)) {
   
   write_rds(list_df, paste0("sim_", sce[j], ".rds"))
 }
+
