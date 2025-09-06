@@ -17,7 +17,7 @@ for(level in sce){
     #### Generate PCA components  ######
 
     ## Perform PCA on the generated X data
-    PCA_res <- prcomp(list_df[["PCA"]] %>% dplyr::select(contains("X")),
+    PCA_res <- prcomp(list_df[["Raw"]] %>% dplyr::select(contains("X")),
                     center = TRUE,
                     scale. = TRUE)
 
@@ -27,7 +27,7 @@ for(level in sce){
     id_80var <- which.max(explained_variance >= 0.8)
 
     # combine with the PCs that cumulatively explain 80% of the variance
-    list_df[["PCA"]] <- cbind(list_df[["PCA"]], PCA_res$x[, 1:id_80var])
+    list_df[["PCA"]] <- cbind(list_df[["Raw"]], PCA_res$x[, 1:id_80var])
 
     #### Mediation Effect Testing and estimation  ####
 
