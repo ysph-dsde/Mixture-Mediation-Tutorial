@@ -53,8 +53,8 @@ for (i in 1:n_scenario) {
   RBias2[i, ] <- abs((rowSums(sema$IE2[[i]]) - true_ie_sum) / true_ie_sum)
 }
 
-sema_bias_df_unadjusted <- build_bias_df(RBias1, "SEMA (Unadjusted)")
-sema_bias_df_adjusted   <- build_bias_df(RBias2, "SEMA (Adjusted)")
+sema_bias_df_unadjusted <- build_bias_df(RBias1, "SE-MA (Unadjusted)")
+sema_bias_df_adjusted   <- build_bias_df(RBias2, "SE-MA (Adjusted)")
 
 # === 2. Load and process PCA results ===
 pca <- readRDS("pca.rds")
@@ -93,9 +93,9 @@ for (i in 1:n_scenario) {
   }
 }
 
-pca_bias_df <- build_bias_df(RBias_pca, "PCA")
-bias_df_first <- build_bias_df(RBias_first, "PCA (First PC)")
-bias_df_three <- build_bias_df(RBias_three, "PCA (Top 3 PCs)")
+pca_bias_df <- build_bias_df(RBias_pca, "PC-MA")
+bias_df_first <- build_bias_df(RBias_first, "PC-MA (First PC)")
+bias_df_three <- build_bias_df(RBias_three, "PC-MA (Top 3 PCs)")
 
 # === 3. Load and process ERS results ===
 ers <- readRDS("ers1.rds")
@@ -126,12 +126,12 @@ bias_df_all <- rbind(
 bias_df_all$Method <- factor(
   bias_df_all$Method,
   levels = c(
-    "SEMA (Unadjusted)",
-    "SEMA (Adjusted)",
-    "PCA",
-    "PCA (First PC)",
-    "PCA (Top 3 PCs)",
-    "ERS"
+    "SE-MA (Unadjusted)",
+    "SE-MA (Adjusted)",
+    "PC-MA",
+    "PC-MA (First PC)",
+    "PC-MAA (Top 3 PCs)",
+    "ERS-MA"
   )
 )
 
@@ -180,3 +180,4 @@ ggplot(bias_df_all, aes(x = Method, y = Bias_mean, fill = Method)) +
     strip.background = element_rect(fill = "white", color = "black"),
     panel.border = element_rect(color = "black", fill = NA)
   )
+
