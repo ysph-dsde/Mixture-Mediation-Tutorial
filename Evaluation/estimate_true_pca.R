@@ -44,7 +44,6 @@ for(level in sce){
     set.seed(1211)
     list_medTest[["PCA"]] <- PCA_medTest(
     data = list_df[["PCA"]],
-    nboot = 1000,
     outcome_nm = outcome_nm,
     mediator_nm = mediator_nm,
     confounders_nm = confounders_nm
