@@ -62,7 +62,6 @@ for (j in my_tasks) {
     EMint = F,
     yreg = "linear",
     mreg =  list("linear"),
-    mval = list(1),
     basec = paste0("c", seq(5)),
     outcome = "y",
     exposure = "ERS",
@@ -91,3 +90,4 @@ for (j in my_tasks) {
 
 mpi.barrier(0)
 mpi.quit()
+
