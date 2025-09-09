@@ -90,7 +90,6 @@ list_headZscore[["medTest"]][["ERS (Simple)"]][["CMA Test"]] <- CMAverse::cmest(
   EMint = F,
   yreg = "linear",
   mreg =  list("linear"),
-  mval = list(1),
   basec = confounders_nm,
   outcome = outcome_nm,
   exposure = "ERS",
@@ -192,7 +191,6 @@ list_headZscore[["medTest"]][["ERS (Complex)"]][["CMA Test"]] <- CMAverse::cmest
   EMint = F,
   yreg = "linear",
   mreg =  list("linear"),
-  mval = list(1),
   basec = confounders_nm,
   outcome = outcome_nm,
   exposure = "ERS",
@@ -217,3 +215,4 @@ list_headZscore[["medTest"]][["ERS (Complex)"]][["CMA Summary Table"]]
 
 ### Output ###3
 write_rds(list_headZscore, "RDS/list_headZscore.rds")
+
