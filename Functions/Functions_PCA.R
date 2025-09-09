@@ -85,7 +85,6 @@ PCA_medTest <- function(data,
           EMint = F,
           yreg = "linear",
           mreg = list("linear"),
-          mval = list(1),
           basec = c(PCA_names[PCA_names != PCA_id]),
           outcome = outcome_nm,
           exposure = PCA_id,
@@ -104,7 +103,6 @@ PCA_medTest <- function(data,
           EMint = F,
           yreg = "linear",
           mreg = list("linear"),
-          mval = list(1),
           basec = c(PCA_names[PCA_names != PCA_id], confounders_nm),
           outcome = outcome_nm,
           exposure = PCA_id,
@@ -137,3 +135,4 @@ PCA_medTest <- function(data,
   names(medTest_res) <- PCA_names
   return(medTest_res)
 }
+
